@@ -1,17 +1,14 @@
 /* eslint-disable */
 
-import Vue from "vue";
-import {
-  StoryblokVue,
-  useStoryblokApi,
-  useStoryblokBridge,
-} from "@storyblok/nuxt-2";
+import Vue from 'vue'
+import { StoryblokVue, useStoryblokApi, useStoryblokBridge } from "@storyblok/nuxt-2";
 <% if (options.useApiClient !== false) { %>
 import { apiPlugin } from "@storyblok/nuxt-2";
 <% } %>
 
 export default (ctx, inject) => {
   const { app, store } = ctx
+
   Vue.use(StoryblokVue, {
     accessToken: "<%= options.accessToken %>",
     bridge: <%= typeof options.bridge === "undefined" ? true : options.bridge %>,
@@ -20,7 +17,9 @@ export default (ctx, inject) => {
     use: [apiPlugin]
     <% } %>
   });
+
   const api = useStoryblokApi()
+
   inject('storyapi', api)
   inject('storybridge', useStoryblokBridge)
-};
+}

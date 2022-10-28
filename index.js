@@ -1,3 +1,6 @@
+import { useStoryblokApi, useStoryblokBridge } from "@storyblok/vue-2";
+import { useFetch, onMounted, ref } from "@nuxtjs/composition-api";
+
 export {
   useStoryblokApi,
   useStoryblokBridge,
@@ -5,10 +8,6 @@ export {
   StoryblokVue,
   renderRichText,
 } from "@storyblok/vue-2";
-import { onMounted } from "vue";
-
-import { useFetch, ssrRef } from "@nuxtjs/composition-api";
-import { useStoryblokApi, useStoryblokBridge } from "@storyblok/vue-2";
 
 export const useStoryblok = (slug, apiOptions = {}, bridgeOptions = {}) => {
   const storyblokApi = useStoryblokApi(apiOptions);
@@ -17,7 +16,7 @@ export const useStoryblok = (slug, apiOptions = {}, bridgeOptions = {}) => {
       "useStoryblok cannot be used if you disabled useApiClient when adding @storyblok/nuxt-2 to your nuxt.config.js"
     );
 
-  const story = ssrRef(null, slug);
+  const story = ref(null);
 
   onMounted(() => {
     if (story.value && story.value.id) {
@@ -29,10 +28,11 @@ export const useStoryblok = (slug, apiOptions = {}, bridgeOptions = {}) => {
     }
   });
 
-  const { fetchState } = useFetch(async () => {
+  const { fetch, fetchState } = useFetch(async () => {
     const { data } = await storyblokApi.get(`cdn/stories/${slug}`, apiOptions);
     story.value = data.story;
   }, slug);
+  fetch();
 
   return { story, fetchState };
 };
