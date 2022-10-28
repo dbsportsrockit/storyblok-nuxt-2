@@ -6,6 +6,5 @@ node_modules
 .vscode
 .DS_STORE
 coverage
-dist
 lib/cypress/videos
 lib/cypress/screenshots
