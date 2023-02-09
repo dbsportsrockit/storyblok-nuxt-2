@@ -1,71 +1,38 @@
-import e from "axios";
-import "@vue/composition-api";
-import { ref, onMounted, useFetch } from "@nuxtjs/composition-api";
-var __defProp = Object.defineProperty;
-var __defProps = Object.defineProperties;
-var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
-var __getOwnPropSymbols = Object.getOwnPropertySymbols;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __spreadValues = (a2, b) => {
-  for (var prop in b || (b = {}))
-    if (__hasOwnProp.call(b, prop))
-      __defNormalProp(a2, prop, b[prop]);
-  if (__getOwnPropSymbols)
-    for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop))
-        __defNormalProp(a2, prop, b[prop]);
+import J from "axios";
+import { ref as L, customRef as U, onServerPrefetch as B, onBeforeMount as M, getCurrentInstance as Y, reactive as H, isReactive as X, set as G, isRef as W, onMounted as Q } from "vue";
+var Z = Object.defineProperty, ee = Object.defineProperties, te = Object.getOwnPropertyDescriptors, O = Object.getOwnPropertySymbols, re = Object.prototype.hasOwnProperty, ne = Object.prototype.propertyIsEnumerable, E = (r, e, t) => e in r ? Z(r, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : r[e] = t, d = (r, e) => {
+  for (var t in e || (e = {}))
+    re.call(e, t) && E(r, t, e[t]);
+  if (O)
+    for (var t of O(e))
+      ne.call(e, t) && E(r, t, e[t]);
+  return r;
+}, _ = (r, e) => ee(r, te(e));
+let P = !1;
+const j = [], oe = (r) => new Promise((e, t) => {
+  if (typeof window > "u" || (window.storyblokRegisterEvent = (o) => {
+    if (window.location === window.parent.location) {
+      console.warn("You are not in Draft Mode or in the Visual Editor.");
+      return;
     }
-  return a2;
-};
-var __spreadProps = (a2, b) => __defProps(a2, __getOwnPropDescs(b));
-let loaded = false;
-const callbacks = [];
-const loadBridge = (src) => {
-  return new Promise((resolve, reject) => {
-    if (typeof window === "undefined")
-      return;
-    window.storyblokRegisterEvent = (cb) => {
-      if (window.location === window.parent.location) {
-        console.warn("You are not in Draft Mode or in the Visual Editor.");
-        return;
-      }
-      if (!loaded)
-        callbacks.push(cb);
-      else
-        cb();
-    };
-    if (document.getElementById("storyblok-javascript-bridge"))
-      return;
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = src;
-    script.id = "storyblok-javascript-bridge";
-    script.onerror = (error) => reject(error);
-    script.onload = (ev) => {
-      callbacks.forEach((cb) => cb());
-      loaded = true;
-      resolve(ev);
-    };
-    document.getElementsByTagName("head")[0].appendChild(script);
-  });
-};
-const pick = function(attrs, allowed) {
-  if (!attrs) {
+    P ? o() : j.push(o);
+  }, document.getElementById("storyblok-javascript-bridge")))
+    return;
+  const n = document.createElement("script");
+  n.async = !0, n.src = r, n.id = "storyblok-javascript-bridge", n.onerror = (o) => t(o), n.onload = (o) => {
+    j.forEach((s) => s()), P = !0, e(o);
+  }, document.getElementsByTagName("head")[0].appendChild(n);
+}), se = function(r, e) {
+  if (!r)
     return null;
+  let t = {};
+  for (let n in r) {
+    let o = r[n];
+    e.indexOf(n) > -1 && o !== null && (t[n] = o);
   }
-  let h2 = {};
-  for (let key in attrs) {
-    let value = attrs[key];
-    if (allowed.indexOf(key) > -1 && value !== null) {
-      h2[key] = value;
-    }
-  }
-  return h2;
-};
-const isEmailLinkType = (type) => type === "email";
-var defaultHtmlSerializer = {
+  return t;
+}, ie = (r) => r === "email";
+var ae = {
   nodes: {
     horizontal_rule() {
       return {
@@ -82,13 +49,13 @@ var defaultHtmlSerializer = {
         tag: "ul"
       };
     },
-    code_block(node) {
+    code_block(r) {
       return {
         tag: [
           "pre",
           {
             tag: "code",
-            attrs: node.attrs
+            attrs: r.attrs
           }
         ]
       };
@@ -98,17 +65,17 @@ var defaultHtmlSerializer = {
         singleTag: "br"
       };
     },
-    heading(node) {
+    heading(r) {
       return {
-        tag: `h${node.attrs.level}`
+        tag: `h${r.attrs.level}`
       };
     },
-    image(node) {
+    image(r) {
       return {
         singleTag: [
           {
             tag: "img",
-            attrs: pick(node.attrs, ["src", "alt", "title"])
+            attrs: se(r.attrs, ["src", "alt", "title"])
           }
         ]
       };
@@ -160,161 +127,100 @@ var defaultHtmlSerializer = {
         tag: "i"
       };
     },
-    link(node) {
-      const attrs = __spreadValues({}, node.attrs);
-      const { linktype = "url" } = node.attrs;
-      if (isEmailLinkType(linktype)) {
-        attrs.href = `mailto:${attrs.href}`;
-      }
-      if (attrs.anchor) {
-        attrs.href = `${attrs.href}#${attrs.anchor}`;
-        delete attrs.anchor;
-      }
-      return {
+    link(r) {
+      const e = d({}, r.attrs), { linktype: t = "url" } = r.attrs;
+      return ie(t) && (e.href = `mailto:${e.href}`), e.anchor && (e.href = `${e.href}#${e.anchor}`, delete e.anchor), {
         tag: [
           {
             tag: "a",
-            attrs
+            attrs: e
           }
         ]
       };
     },
-    styled(node) {
+    styled(r) {
       return {
         tag: [
           {
             tag: "span",
-            attrs: node.attrs
+            attrs: r.attrs
           }
         ]
       };
     }
   }
 };
-const escapeHTML = function(string) {
-  const htmlEscapes = {
+const ce = function(r) {
+  const e = {
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
     '"': "&quot;",
     "'": "&#39;"
-  };
-  const reUnescapedHtml = /[&<>"']/g;
-  const reHasUnescapedHtml = RegExp(reUnescapedHtml.source);
-  return string && reHasUnescapedHtml.test(string) ? string.replace(reUnescapedHtml, (chr) => htmlEscapes[chr]) : string;
+  }, t = /[&<>"']/g, n = RegExp(t.source);
+  return r && n.test(r) ? r.replace(t, (o) => e[o]) : r;
 };
-class RichTextResolver {
-  constructor(schema) {
-    if (!schema) {
-      schema = defaultHtmlSerializer;
-    }
-    this.marks = schema.marks || [];
-    this.nodes = schema.nodes || [];
+class I {
+  constructor(e) {
+    e || (e = ae), this.marks = e.marks || [], this.nodes = e.nodes || [];
   }
-  addNode(key, schema) {
-    this.nodes[key] = schema;
+  addNode(e, t) {
+    this.nodes[e] = t;
   }
-  addMark(key, schema) {
-    this.marks[key] = schema;
+  addMark(e, t) {
+    this.marks[e] = t;
   }
-  render(data = {}) {
-    if (data.content && Array.isArray(data.content)) {
-      let html = "";
-      data.content.forEach((node) => {
-        html += this.renderNode(node);
-      });
-      return html;
+  render(e = {}) {
+    if (e.content && Array.isArray(e.content)) {
+      let t = "";
+      return e.content.forEach((n) => {
+        t += this.renderNode(n);
+      }), t;
     }
-    console.warn("The render method must receive an object with a content field, which is an array");
-    return "";
+    return console.warn("The render method must receive an object with a content field, which is an array"), "";
   }
-  renderNode(item) {
-    let html = [];
-    if (item.marks) {
-      item.marks.forEach((m) => {
-        const mark = this.getMatchingMark(m);
-        if (mark) {
-          html.push(this.renderOpeningTag(mark.tag));
-        }
-      });
-    }
-    const node = this.getMatchingNode(item);
-    if (node && node.tag) {
-      html.push(this.renderOpeningTag(node.tag));
-    }
-    if (item.content) {
-      item.content.forEach((content) => {
-        html.push(this.renderNode(content));
-      });
-    } else if (item.text) {
-      html.push(escapeHTML(item.text));
-    } else if (node && node.singleTag) {
-      html.push(this.renderTag(node.singleTag, " /"));
-    } else if (node && node.html) {
-      html.push(node.html);
-    }
-    if (node && node.tag) {
-      html.push(this.renderClosingTag(node.tag));
-    }
-    if (item.marks) {
-      item.marks.slice(0).reverse().forEach((m) => {
-        const mark = this.getMatchingMark(m);
-        if (mark) {
-          html.push(this.renderClosingTag(mark.tag));
-        }
-      });
-    }
-    return html.join("");
+  renderNode(e) {
+    let t = [];
+    e.marks && e.marks.forEach((o) => {
+      const s = this.getMatchingMark(o);
+      s && t.push(this.renderOpeningTag(s.tag));
+    });
+    const n = this.getMatchingNode(e);
+    return n && n.tag && t.push(this.renderOpeningTag(n.tag)), e.content ? e.content.forEach((o) => {
+      t.push(this.renderNode(o));
+    }) : e.text ? t.push(ce(e.text)) : n && n.singleTag ? t.push(this.renderTag(n.singleTag, " /")) : n && n.html && t.push(n.html), n && n.tag && t.push(this.renderClosingTag(n.tag)), e.marks && e.marks.slice(0).reverse().forEach((o) => {
+      const s = this.getMatchingMark(o);
+      s && t.push(this.renderClosingTag(s.tag));
+    }), t.join("");
   }
-  renderTag(tags, ending) {
-    if (tags.constructor === String) {
-      return `<${tags}${ending}>`;
-    }
-    const all = tags.map((tag) => {
-      if (tag.constructor === String) {
-        return `<${tag}${ending}>`;
-      } else {
-        let h2 = `<${tag.tag}`;
-        if (tag.attrs) {
-          for (let key in tag.attrs) {
-            let value = tag.attrs[key];
-            if (value !== null) {
-              h2 += ` ${key}="${value}"`;
-            }
+  renderTag(e, t) {
+    return e.constructor === String ? `<${e}${t}>` : e.map((n) => {
+      if (n.constructor === String)
+        return `<${n}${t}>`;
+      {
+        let o = `<${n.tag}`;
+        if (n.attrs)
+          for (let s in n.attrs) {
+            let a = n.attrs[s];
+            a !== null && (o += ` ${s}="${a}"`);
           }
-        }
-        return `${h2}${ending}>`;
+        return `${o}${t}>`;
       }
-    });
-    return all.join("");
+    }).join("");
   }
-  renderOpeningTag(tags) {
-    return this.renderTag(tags, "");
+  renderOpeningTag(e) {
+    return this.renderTag(e, "");
   }
-  renderClosingTag(tags) {
-    if (tags.constructor === String) {
-      return `</${tags}>`;
-    }
-    const all = tags.slice(0).reverse().map((tag) => {
-      if (tag.constructor === String) {
-        return `</${tag}>`;
-      } else {
-        return `</${tag.tag}>`;
-      }
-    });
-    return all.join("");
+  renderClosingTag(e) {
+    return e.constructor === String ? `</${e}>` : e.slice(0).reverse().map((t) => t.constructor === String ? `</${t}>` : `</${t.tag}>`).join("");
   }
-  getMatchingNode(item) {
-    if (typeof this.nodes[item.type] !== "function") {
-      return;
-    }
-    return this.nodes[item.type](item);
+  getMatchingNode(e) {
+    if (typeof this.nodes[e.type] == "function")
+      return this.nodes[e.type](e);
   }
-  getMatchingMark(item) {
-    if (typeof this.marks[item.type] !== "function") {
-      return;
-    }
-    return this.marks[item.type](item);
+  getMatchingMark(e) {
+    if (typeof this.marks[e.type] == "function")
+      return this.marks[e.type](e);
   }
 }
 /*!
@@ -322,340 +228,334 @@ class RichTextResolver {
  * Universal JavaScript SDK for Storyblok's API
  * (c) 2020-2022 Stobylok Team
  */
-function t(e2) {
-  return typeof e2 == "number" && (e2 == e2 && e2 !== 1 / 0 && e2 !== -1 / 0);
+function N(r) {
+  return typeof r == "number" && r == r && r !== 1 / 0 && r !== -1 / 0;
 }
-function s(e2, s2, r2) {
-  if (!t(s2))
+function D(r, e, t) {
+  if (!N(e))
     throw new TypeError("Expected `limit` to be a finite number");
-  if (!t(r2))
+  if (!N(t))
     throw new TypeError("Expected `interval` to be a finite number");
-  var i2 = [], n2 = [], o2 = 0, a2 = function() {
-    o2++;
-    var t2 = setTimeout(function() {
-      o2--, i2.length > 0 && a2(), n2 = n2.filter(function(e3) {
-        return e3 !== t2;
+  var n = [], o = [], s = 0, a = function() {
+    s++;
+    var c = setTimeout(function() {
+      s--, n.length > 0 && a(), o = o.filter(function(u) {
+        return u !== c;
       });
-    }, r2);
-    n2.indexOf(t2) < 0 && n2.push(t2);
-    var s3 = i2.shift();
-    s3.resolve(e2.apply(s3.self, s3.args));
-  }, l2 = function() {
-    var e3 = arguments, t2 = this;
-    return new Promise(function(r3, n3) {
-      i2.push({ resolve: r3, reject: n3, args: e3, self: t2 }), o2 < s2 && a2();
+    }, t);
+    o.indexOf(c) < 0 && o.push(c);
+    var l = n.shift();
+    l.resolve(r.apply(l.self, l.args));
+  }, i = function() {
+    var c = arguments, l = this;
+    return new Promise(function(u, f) {
+      n.push({ resolve: u, reject: f, args: c, self: l }), s < e && a();
     });
   };
-  return l2.abort = function() {
-    n2.forEach(clearTimeout), n2 = [], i2.forEach(function(e3) {
-      e3.reject(new throttle.AbortError());
-    }), i2.length = 0;
-  }, l2;
+  return i.abort = function() {
+    o.forEach(clearTimeout), o = [], n.forEach(function(c) {
+      c.reject(new throttle.AbortError());
+    }), n.length = 0;
+  }, i;
 }
-s.AbortError = function() {
+D.AbortError = function() {
   Error.call(this, "Throttled function aborted"), this.name = "AbortError";
 };
-const r = function(e2, t2) {
-  if (!e2)
+const le = function(r, e) {
+  if (!r)
     return null;
-  let s2 = {};
-  for (let r2 in e2) {
-    let i2 = e2[r2];
-    t2.indexOf(r2) > -1 && i2 !== null && (s2[r2] = i2);
+  let t = {};
+  for (let n in r) {
+    let o = r[n];
+    e.indexOf(n) > -1 && o !== null && (t[n] = o);
   }
-  return s2;
+  return t;
 };
-var i = { nodes: { horizontal_rule: () => ({ singleTag: "hr" }), blockquote: () => ({ tag: "blockquote" }), bullet_list: () => ({ tag: "ul" }), code_block: (e2) => ({ tag: ["pre", { tag: "code", attrs: e2.attrs }] }), hard_break: () => ({ singleTag: "br" }), heading: (e2) => ({ tag: `h${e2.attrs.level}` }), image: (e2) => ({ singleTag: [{ tag: "img", attrs: r(e2.attrs, ["src", "alt", "title"]) }] }), list_item: () => ({ tag: "li" }), ordered_list: () => ({ tag: "ol" }), paragraph: () => ({ tag: "p" }) }, marks: { bold: () => ({ tag: "b" }), strike: () => ({ tag: "strike" }), underline: () => ({ tag: "u" }), strong: () => ({ tag: "strong" }), code: () => ({ tag: "code" }), italic: () => ({ tag: "i" }), link(e2) {
-  const t2 = __spreadValues({}, e2.attrs), { linktype: s2 = "url" } = e2.attrs;
-  return s2 === "email" && (t2.href = `mailto:${t2.href}`), t2.anchor && (t2.href = `${t2.href}#${t2.anchor}`, delete t2.anchor), { tag: [{ tag: "a", attrs: t2 }] };
-}, styled: (e2) => ({ tag: [{ tag: "span", attrs: e2.attrs }] }) } };
-class n {
-  constructor(e2) {
-    e2 || (e2 = i), this.marks = e2.marks || [], this.nodes = e2.nodes || [];
+var ue = { nodes: { horizontal_rule: () => ({ singleTag: "hr" }), blockquote: () => ({ tag: "blockquote" }), bullet_list: () => ({ tag: "ul" }), code_block: (r) => ({ tag: ["pre", { tag: "code", attrs: r.attrs }] }), hard_break: () => ({ singleTag: "br" }), heading: (r) => ({ tag: `h${r.attrs.level}` }), image: (r) => ({ singleTag: [{ tag: "img", attrs: le(r.attrs, ["src", "alt", "title"]) }] }), list_item: () => ({ tag: "li" }), ordered_list: () => ({ tag: "ol" }), paragraph: () => ({ tag: "p" }) }, marks: { bold: () => ({ tag: "b" }), strike: () => ({ tag: "strike" }), underline: () => ({ tag: "u" }), strong: () => ({ tag: "strong" }), code: () => ({ tag: "code" }), italic: () => ({ tag: "i" }), link(r) {
+  const e = d({}, r.attrs), { linktype: t = "url" } = r.attrs;
+  return t === "email" && (e.href = `mailto:${e.href}`), e.anchor && (e.href = `${e.href}#${e.anchor}`, delete e.anchor), { tag: [{ tag: "a", attrs: e }] };
+}, styled: (r) => ({ tag: [{ tag: "span", attrs: r.attrs }] }) } };
+class he {
+  constructor(e) {
+    e || (e = ue), this.marks = e.marks || [], this.nodes = e.nodes || [];
   }
-  addNode(e2, t2) {
-    this.nodes[e2] = t2;
+  addNode(e, t) {
+    this.nodes[e] = t;
   }
-  addMark(e2, t2) {
-    this.marks[e2] = t2;
+  addMark(e, t) {
+    this.marks[e] = t;
   }
-  render(e2 = {}) {
-    if (e2.content && Array.isArray(e2.content)) {
-      let t2 = "";
-      return e2.content.forEach((e3) => {
-        t2 += this.renderNode(e3);
-      }), t2;
+  render(e = {}) {
+    if (e.content && Array.isArray(e.content)) {
+      let t = "";
+      return e.content.forEach((n) => {
+        t += this.renderNode(n);
+      }), t;
     }
     return console.warn("The render method must receive an object with a content field, which is an array"), "";
   }
-  renderNode(e2) {
-    let t2 = [];
-    e2.marks && e2.marks.forEach((e3) => {
-      const s3 = this.getMatchingMark(e3);
-      s3 && t2.push(this.renderOpeningTag(s3.tag));
+  renderNode(e) {
+    let t = [];
+    e.marks && e.marks.forEach((o) => {
+      const s = this.getMatchingMark(o);
+      s && t.push(this.renderOpeningTag(s.tag));
     });
-    const s2 = this.getMatchingNode(e2);
-    return s2 && s2.tag && t2.push(this.renderOpeningTag(s2.tag)), e2.content ? e2.content.forEach((e3) => {
-      t2.push(this.renderNode(e3));
-    }) : e2.text ? t2.push(function(e3) {
-      const t3 = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }, s3 = /[&<>"']/g, r2 = RegExp(s3.source);
-      return e3 && r2.test(e3) ? e3.replace(s3, (e4) => t3[e4]) : e3;
-    }(e2.text)) : s2 && s2.singleTag ? t2.push(this.renderTag(s2.singleTag, " /")) : s2 && s2.html && t2.push(s2.html), s2 && s2.tag && t2.push(this.renderClosingTag(s2.tag)), e2.marks && e2.marks.slice(0).reverse().forEach((e3) => {
-      const s3 = this.getMatchingMark(e3);
-      s3 && t2.push(this.renderClosingTag(s3.tag));
-    }), t2.join("");
+    const n = this.getMatchingNode(e);
+    return n && n.tag && t.push(this.renderOpeningTag(n.tag)), e.content ? e.content.forEach((o) => {
+      t.push(this.renderNode(o));
+    }) : e.text ? t.push(function(o) {
+      const s = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }, a = /[&<>"']/g, i = RegExp(a.source);
+      return o && i.test(o) ? o.replace(a, (c) => s[c]) : o;
+    }(e.text)) : n && n.singleTag ? t.push(this.renderTag(n.singleTag, " /")) : n && n.html && t.push(n.html), n && n.tag && t.push(this.renderClosingTag(n.tag)), e.marks && e.marks.slice(0).reverse().forEach((o) => {
+      const s = this.getMatchingMark(o);
+      s && t.push(this.renderClosingTag(s.tag));
+    }), t.join("");
   }
-  renderTag(e2, t2) {
-    if (e2.constructor === String)
-      return `<${e2}${t2}>`;
-    return e2.map((e3) => {
-      if (e3.constructor === String)
-        return `<${e3}${t2}>`;
+  renderTag(e, t) {
+    return e.constructor === String ? `<${e}${t}>` : e.map((n) => {
+      if (n.constructor === String)
+        return `<${n}${t}>`;
       {
-        let s2 = `<${e3.tag}`;
-        if (e3.attrs)
-          for (let t3 in e3.attrs) {
-            let r2 = e3.attrs[t3];
-            r2 !== null && (s2 += ` ${t3}="${r2}"`);
+        let o = `<${n.tag}`;
+        if (n.attrs)
+          for (let s in n.attrs) {
+            let a = n.attrs[s];
+            a !== null && (o += ` ${s}="${a}"`);
           }
-        return `${s2}${t2}>`;
+        return `${o}${t}>`;
       }
     }).join("");
   }
-  renderOpeningTag(e2) {
-    return this.renderTag(e2, "");
+  renderOpeningTag(e) {
+    return this.renderTag(e, "");
   }
-  renderClosingTag(e2) {
-    if (e2.constructor === String)
-      return `</${e2}>`;
-    return e2.slice(0).reverse().map((e3) => e3.constructor === String ? `</${e3}>` : `</${e3.tag}>`).join("");
+  renderClosingTag(e) {
+    return e.constructor === String ? `</${e}>` : e.slice(0).reverse().map((t) => t.constructor === String ? `</${t}>` : `</${t.tag}>`).join("");
   }
-  getMatchingNode(e2) {
-    if (typeof this.nodes[e2.type] == "function")
-      return this.nodes[e2.type](e2);
+  getMatchingNode(e) {
+    if (typeof this.nodes[e.type] == "function")
+      return this.nodes[e.type](e);
   }
-  getMatchingMark(e2) {
-    if (typeof this.marks[e2.type] == "function")
-      return this.marks[e2.type](e2);
+  getMatchingMark(e) {
+    if (typeof this.marks[e.type] == "function")
+      return this.marks[e.type](e);
   }
 }
-const o = (e2 = 0, t2 = e2) => {
-  const s2 = Math.abs(t2 - e2) || 0, r2 = e2 < t2 ? 1 : -1;
-  return ((e3 = 0, t3) => [...Array(e3)].map(t3))(s2, (t3, s3) => s3 * r2 + e2);
-}, a = (e2, t2, s2) => {
-  const r2 = [];
-  for (const i2 in e2) {
-    if (!Object.prototype.hasOwnProperty.call(e2, i2))
+const fe = (r = 0, e = r) => {
+  const t = Math.abs(e - r) || 0, n = r < e ? 1 : -1;
+  return ((o = 0, s) => [...Array(o)].map(s))(t, (o, s) => s * n + r);
+}, $ = (r, e, t) => {
+  const n = [];
+  for (const o in r) {
+    if (!Object.prototype.hasOwnProperty.call(r, o))
       continue;
-    const n2 = e2[i2], o2 = s2 ? "" : encodeURIComponent(i2);
-    let l2;
-    l2 = typeof n2 == "object" ? a(n2, t2 ? t2 + encodeURIComponent("[" + o2 + "]") : o2, Array.isArray(n2)) : (t2 ? t2 + encodeURIComponent("[" + o2 + "]") : o2) + "=" + encodeURIComponent(n2), r2.push(l2);
+    const s = r[o], a = t ? "" : encodeURIComponent(o);
+    let i;
+    i = typeof s == "object" ? $(s, e ? e + encodeURIComponent("[" + a + "]") : a, Array.isArray(s)) : (e ? e + encodeURIComponent("[" + a + "]") : a) + "=" + encodeURIComponent(s), n.push(i);
   }
-  return r2.join("&");
+  return n.join("&");
 };
-let l = {}, c = {};
-class h {
-  constructor(t2, r2) {
-    if (!r2) {
-      let e2 = t2.region ? `-${t2.region}` : "", s2 = t2.https === false ? "http" : "https";
-      r2 = t2.oauthToken === void 0 ? `${s2}://api${e2}.storyblok.com/v2` : `${s2}://api${e2}.storyblok.com/v1`;
+let m = {}, g = {};
+class de {
+  constructor(e, t) {
+    if (!t) {
+      let s = e.region ? `-${e.region}` : "", a = e.https === !1 ? "http" : "https";
+      t = e.oauthToken === void 0 ? `${a}://api${s}.storyblok.com/v2` : `${a}://api${s}.storyblok.com/v1`;
     }
-    let i2 = Object.assign({}, t2.headers), o2 = 5;
-    t2.oauthToken !== void 0 && (i2.Authorization = t2.oauthToken, o2 = 3), t2.rateLimit !== void 0 && (o2 = t2.rateLimit), this.richTextResolver = new n(t2.richTextSchema), typeof t2.componentResolver == "function" && this.setComponentResolver(t2.componentResolver), this.maxRetries = t2.maxRetries || 5, this.throttle = s(this.throttledRequest, o2, 1e3), this.accessToken = t2.accessToken, this.relations = {}, this.links = {}, this.cache = t2.cache || { clear: "manual" }, this.client = e.create({ baseURL: r2, timeout: t2.timeout || 0, headers: i2, proxy: t2.proxy || false }), t2.responseInterceptor && this.client.interceptors.response.use((e2) => t2.responseInterceptor(e2)), this.resolveNestedRelations = t2.resolveNestedRelations || true;
+    let n = Object.assign({}, e.headers), o = 5;
+    e.oauthToken !== void 0 && (n.Authorization = e.oauthToken, o = 3), e.rateLimit !== void 0 && (o = e.rateLimit), this.richTextResolver = new he(e.richTextSchema), typeof e.componentResolver == "function" && this.setComponentResolver(e.componentResolver), this.maxRetries = e.maxRetries || 5, this.throttle = D(this.throttledRequest, o, 1e3), this.accessToken = e.accessToken, this.relations = {}, this.links = {}, this.cache = e.cache || { clear: "manual" }, this.client = J.create({ baseURL: t, timeout: e.timeout || 0, headers: n, proxy: e.proxy || !1 }), e.responseInterceptor && this.client.interceptors.response.use((s) => e.responseInterceptor(s)), this.resolveNestedRelations = e.resolveNestedRelations || !0;
   }
-  setComponentResolver(e2) {
-    this.richTextResolver.addNode("blok", (t2) => {
-      let s2 = "";
-      return t2.attrs.body.forEach((t3) => {
-        s2 += e2(t3.component, t3);
-      }), { html: s2 };
+  setComponentResolver(e) {
+    this.richTextResolver.addNode("blok", (t) => {
+      let n = "";
+      return t.attrs.body.forEach((o) => {
+        n += e(o.component, o);
+      }), { html: n };
     });
   }
-  parseParams(e2 = {}) {
-    return e2.version || (e2.version = "published"), e2.token || (e2.token = this.getToken()), e2.cv || (e2.cv = c[e2.token]), Array.isArray(e2.resolve_relations) && (e2.resolve_relations = e2.resolve_relations.join(",")), e2;
+  parseParams(e = {}) {
+    return e.version || (e.version = "published"), e.token || (e.token = this.getToken()), e.cv || (e.cv = g[e.token]), Array.isArray(e.resolve_relations) && (e.resolve_relations = e.resolve_relations.join(",")), e;
   }
-  factoryParamOptions(e2, t2 = {}) {
-    return ((e3 = "") => e3.indexOf("/cdn/") > -1)(e2) ? this.parseParams(t2) : t2;
+  factoryParamOptions(e, t = {}) {
+    return ((n = "") => n.indexOf("/cdn/") > -1)(e) ? this.parseParams(t) : t;
   }
-  makeRequest(e2, t2, s2, r2) {
-    const i2 = this.factoryParamOptions(e2, ((e3 = {}, t3 = 25, s3 = 1) => __spreadProps(__spreadValues({}, e3), { per_page: t3, page: s3 }))(t2, s2, r2));
-    return this.cacheResponse(e2, i2);
+  makeRequest(e, t, n, o) {
+    const s = this.factoryParamOptions(e, ((a = {}, i = 25, c = 1) => _(d({}, a), { per_page: i, page: c }))(t, n, o));
+    return this.cacheResponse(e, s);
   }
-  get(e2, t2) {
-    let s2 = `/${e2}`;
-    const r2 = this.factoryParamOptions(s2, t2);
-    return this.cacheResponse(s2, r2);
+  get(e, t) {
+    let n = `/${e}`;
+    const o = this.factoryParamOptions(n, t);
+    return this.cacheResponse(n, o);
   }
-  async getAll(e2, t2 = {}, s2) {
-    const r2 = t2.per_page || 25, i2 = `/${e2}`, n2 = i2.split("/");
-    s2 = s2 || n2[n2.length - 1];
-    const a2 = await this.makeRequest(i2, t2, r2, 1), l2 = Math.ceil(a2.total / r2);
-    return ((e3 = [], t3) => e3.map(t3).reduce((e4, t4) => [...e4, ...t4], []))([a2, ...await (async (e3 = [], t3) => Promise.all(e3.map(t3)))(o(1, l2), async (e3) => this.makeRequest(i2, t2, r2, e3 + 1))], (e3) => Object.values(e3.data[s2]));
+  async getAll(e, t = {}, n) {
+    const o = t.per_page || 25, s = `/${e}`, a = s.split("/");
+    n = n || a[a.length - 1];
+    const i = await this.makeRequest(s, t, o, 1), c = Math.ceil(i.total / o);
+    return ((l = [], u) => l.map(u).reduce((f, h) => [...f, ...h], []))([i, ...await (async (l = [], u) => Promise.all(l.map(u)))(fe(1, c), async (l) => this.makeRequest(s, t, o, l + 1))], (l) => Object.values(l.data[n]));
   }
-  post(e2, t2) {
-    let s2 = `/${e2}`;
-    return this.throttle("post", s2, t2);
+  post(e, t) {
+    let n = `/${e}`;
+    return this.throttle("post", n, t);
   }
-  put(e2, t2) {
-    let s2 = `/${e2}`;
-    return this.throttle("put", s2, t2);
+  put(e, t) {
+    let n = `/${e}`;
+    return this.throttle("put", n, t);
   }
-  delete(e2, t2) {
-    let s2 = `/${e2}`;
-    return this.throttle("delete", s2, t2);
+  delete(e, t) {
+    let n = `/${e}`;
+    return this.throttle("delete", n, t);
   }
-  getStories(e2) {
-    return this.get("cdn/stories", e2);
+  getStories(e) {
+    return this.get("cdn/stories", e);
   }
-  getStory(e2, t2) {
-    return this.get(`cdn/stories/${e2}`, t2);
+  getStory(e, t) {
+    return this.get(`cdn/stories/${e}`, t);
   }
-  setToken(e2) {
-    this.accessToken = e2;
+  setToken(e) {
+    this.accessToken = e;
   }
   getToken() {
     return this.accessToken;
   }
-  _cleanCopy(e2) {
-    return JSON.parse(JSON.stringify(e2));
+  _cleanCopy(e) {
+    return JSON.parse(JSON.stringify(e));
   }
-  _insertLinks(e2, t2) {
-    const s2 = e2[t2];
-    s2 && s2.fieldtype == "multilink" && s2.linktype == "story" && typeof s2.id == "string" && this.links[s2.id] ? s2.story = this._cleanCopy(this.links[s2.id]) : s2 && s2.linktype === "story" && typeof s2.uuid == "string" && this.links[s2.uuid] && (s2.story = this._cleanCopy(this.links[s2.uuid]));
+  _insertLinks(e, t) {
+    const n = e[t];
+    n && n.fieldtype == "multilink" && n.linktype == "story" && typeof n.id == "string" && this.links[n.id] ? n.story = this._cleanCopy(this.links[n.id]) : n && n.linktype === "story" && typeof n.uuid == "string" && this.links[n.uuid] && (n.story = this._cleanCopy(this.links[n.uuid]));
   }
-  _insertRelations(e2, t2, s2) {
-    if (s2.indexOf(e2.component + "." + t2) > -1) {
-      if (typeof e2[t2] == "string")
-        this.relations[e2[t2]] && (e2[t2] = this._cleanCopy(this.relations[e2[t2]]));
-      else if (e2[t2].constructor === Array) {
-        let s3 = [];
-        e2[t2].forEach((e3) => {
-          this.relations[e3] && s3.push(this._cleanCopy(this.relations[e3]));
-        }), e2[t2] = s3;
+  _insertRelations(e, t, n) {
+    if (n.indexOf(e.component + "." + t) > -1) {
+      if (typeof e[t] == "string")
+        this.relations[e[t]] && (e[t] = this._cleanCopy(this.relations[e[t]]));
+      else if (e[t].constructor === Array) {
+        let o = [];
+        e[t].forEach((s) => {
+          this.relations[s] && o.push(this._cleanCopy(this.relations[s]));
+        }), e[t] = o;
       }
     }
   }
-  _insertAssetsRelations(e2, t2) {
-    t2.forEach((t3) => {
-      e2.id === t3.id && (e2.original = t3, e2.original.filename = e2.filename, e2.original.filename = e2.original.filename.includes("https://s3.amazonaws.com/") ? e2.original.filename : e2.original.filename.replace("https://", "https://s3.amazonaws.com/"), delete e2.original.s3_filename);
+  _insertAssetsRelations(e, t) {
+    t.forEach((n) => {
+      e.id === n.id && (e.original = n, e.original.filename = e.filename, e.original.filename = e.original.filename.includes("https://s3.amazonaws.com/") ? e.original.filename : e.original.filename.replace("https://", "https://s3.amazonaws.com/"), delete e.original.s3_filename);
     });
   }
-  iterateTree(e2, t2) {
-    let s2 = (e3) => {
-      if (e3 != null) {
-        if (e3.constructor === Array)
-          for (let t3 = 0; t3 < e3.length; t3++)
-            s2(e3[t3]);
-        else if (e3.constructor === Object) {
-          if (e3._stopResolving)
+  iterateTree(e, t) {
+    let n = (o) => {
+      if (o != null) {
+        if (o.constructor === Array)
+          for (let s = 0; s < o.length; s++)
+            n(o[s]);
+        else if (o.constructor === Object) {
+          if (o._stopResolving)
             return;
-          for (let r2 in e3)
-            e3.component && e3._uid || e3.type === "link" ? (this._insertRelations(e3, r2, t2), this._insertLinks(e3, r2)) : "id" in e3 && e3.fieldtype === "asset" && this._insertAssetsRelations(e3, t2), s2(e3[r2]);
+          for (let s in o)
+            o.component && o._uid || o.type === "link" ? (this._insertRelations(o, s, t), this._insertLinks(o, s)) : "id" in o && o.fieldtype === "asset" && this._insertAssetsRelations(o, t), n(o[s]);
         }
       }
     };
-    s2(e2.content);
+    n(e.content);
   }
-  async resolveLinks(e2, t2) {
-    let s2 = [];
-    if (e2.link_uuids) {
-      const r2 = e2.link_uuids.length;
-      let i2 = [];
-      const n2 = 50;
-      for (let t3 = 0; t3 < r2; t3 += n2) {
-        const s3 = Math.min(r2, t3 + n2);
-        i2.push(e2.link_uuids.slice(t3, s3));
+  async resolveLinks(e, t) {
+    let n = [];
+    if (e.link_uuids) {
+      const o = e.link_uuids.length;
+      let s = [];
+      const a = 50;
+      for (let i = 0; i < o; i += a) {
+        const c = Math.min(o, i + a);
+        s.push(e.link_uuids.slice(i, c));
       }
-      for (let e3 = 0; e3 < i2.length; e3++) {
-        (await this.getStories({ per_page: n2, language: t2.language, version: t2.version, by_uuids: i2[e3].join(",") })).data.stories.forEach((e4) => {
-          s2.push(e4);
+      for (let i = 0; i < s.length; i++)
+        (await this.getStories({ per_page: a, language: t.language, version: t.version, by_uuids: s[i].join(",") })).data.stories.forEach((c) => {
+          n.push(c);
         });
-      }
     } else
-      s2 = e2.links;
-    s2.forEach((e3) => {
-      this.links[e3.uuid] = __spreadProps(__spreadValues({}, e3), { _stopResolving: true });
+      n = e.links;
+    n.forEach((o) => {
+      this.links[o.uuid] = _(d({}, o), { _stopResolving: !0 });
     });
   }
-  async resolveRelations(e2, t2) {
-    let s2 = [];
-    if (e2.rel_uuids) {
-      const r2 = e2.rel_uuids.length;
-      let i2 = [];
-      const n2 = 50;
-      for (let t3 = 0; t3 < r2; t3 += n2) {
-        const s3 = Math.min(r2, t3 + n2);
-        i2.push(e2.rel_uuids.slice(t3, s3));
+  async resolveRelations(e, t) {
+    let n = [];
+    if (e.rel_uuids) {
+      const o = e.rel_uuids.length;
+      let s = [];
+      const a = 50;
+      for (let i = 0; i < o; i += a) {
+        const c = Math.min(o, i + a);
+        s.push(e.rel_uuids.slice(i, c));
       }
-      for (let e3 = 0; e3 < i2.length; e3++) {
-        (await this.getStories({ per_page: n2, language: t2.language, version: t2.version, by_uuids: i2[e3].join(",") })).data.stories.forEach((e4) => {
-          s2.push(e4);
+      for (let i = 0; i < s.length; i++)
+        (await this.getStories({ per_page: a, language: t.language, version: t.version, by_uuids: s[i].join(",") })).data.stories.forEach((c) => {
+          n.push(c);
         });
-      }
     } else
-      s2 = e2.rels;
-    s2.forEach((e3) => {
-      this.relations[e3.uuid] = __spreadProps(__spreadValues({}, e3), { _stopResolving: true });
+      n = e.rels;
+    n.forEach((o) => {
+      this.relations[o.uuid] = _(d({}, o), { _stopResolving: !0 });
     });
   }
-  async resolveStories(e2, t2) {
-    let s2 = [];
-    if (t2.resolve_relations !== void 0 && t2.resolve_relations.length > 0 && (e2.rels || e2.rel_uuids) && (s2 = t2.resolve_relations.split(","), await this.resolveRelations(e2, t2)), ["1", "story", "url"].indexOf(t2.resolve_links) > -1 && (e2.links || e2.link_uuids) && await this.resolveLinks(e2, t2), this.resolveNestedRelations)
-      for (const e3 in this.relations)
-        this.iterateTree(this.relations[e3], s2);
-    e2.story ? this.iterateTree(e2.story, s2) : e2.stories.forEach((e3) => {
-      this.iterateTree(e3, s2);
+  async resolveStories(e, t) {
+    let n = [];
+    if (t.resolve_relations !== void 0 && t.resolve_relations.length > 0 && (e.rels || e.rel_uuids) && (n = t.resolve_relations.split(","), await this.resolveRelations(e, t)), ["1", "story", "url"].indexOf(t.resolve_links) > -1 && (e.links || e.link_uuids) && await this.resolveLinks(e, t), this.resolveNestedRelations)
+      for (const o in this.relations)
+        this.iterateTree(this.relations[o], n);
+    e.story ? this.iterateTree(e.story, n) : e.stories.forEach((o) => {
+      this.iterateTree(o, n);
     });
   }
-  resolveAssetsRelations(e2) {
-    const { assets: t2, stories: s2, story: r2 } = e2;
-    if (s2)
-      for (const e3 of s2)
-        this.iterateTree(e3, t2);
+  resolveAssetsRelations(e) {
+    const { assets: t, stories: n, story: o } = e;
+    if (n)
+      for (const s of n)
+        this.iterateTree(s, t);
     else {
-      if (!r2)
-        return e2;
-      this.iterateTree(r2, t2);
+      if (!o)
+        return e;
+      this.iterateTree(o, t);
     }
   }
-  cacheResponse(e2, t2, s2) {
-    return s2 === void 0 && (s2 = 0), new Promise(async (r2, i2) => {
-      let n2 = a({ url: e2, params: t2 }), o2 = this.cacheProvider();
-      if (this.cache.clear === "auto" && t2.version === "draft" && await this.flushCache(), t2.version === "published" && e2 != "/cdn/spaces/me") {
-        const e3 = await o2.get(n2);
-        if (e3)
-          return r2(e3);
+  cacheResponse(e, t, n) {
+    return n === void 0 && (n = 0), new Promise(async (o, s) => {
+      let a = $({ url: e, params: t }), i = this.cacheProvider();
+      if (this.cache.clear === "auto" && t.version === "draft" && await this.flushCache(), t.version === "published" && e != "/cdn/spaces/me") {
+        const l = await i.get(a);
+        if (l)
+          return o(l);
       }
       try {
-        let s3 = await this.throttle("get", e2, { params: t2, paramsSerializer: (e3) => a(e3) }), l3 = { data: s3.data, headers: s3.headers };
-        if (l3.data.assets && l3.data.assets.length && this.resolveAssetsRelations(l3.data), s3.headers["per-page"] && (l3 = Object.assign({}, l3, { perPage: parseInt(s3.headers["per-page"]), total: parseInt(s3.headers.total) })), s3.status != 200)
-          return i2(s3);
-        (l3.data.story || l3.data.stories) && await this.resolveStories(l3.data, t2), t2.version === "published" && e2 != "/cdn/spaces/me" && o2.set(n2, l3), l3.data.cv && (t2.version == "draft" && c[t2.token] != l3.data.cv && this.flushCache(), c[t2.token] = l3.data.cv), r2(l3);
-      } catch (n3) {
-        if (n3.response && n3.response.status === 429 && (s2 += 1) < this.maxRetries)
-          return console.log(`Hit rate limit. Retrying in ${s2} seconds.`), await (l2 = 1e3 * s2, new Promise((e3) => setTimeout(e3, l2))), this.cacheResponse(e2, t2, s2).then(r2).catch(i2);
-        i2(n3);
+        let l = await this.throttle("get", e, { params: t, paramsSerializer: (f) => $(f) }), u = { data: l.data, headers: l.headers };
+        if (u.data.assets && u.data.assets.length && this.resolveAssetsRelations(u.data), l.headers["per-page"] && (u = Object.assign({}, u, { perPage: parseInt(l.headers["per-page"]), total: parseInt(l.headers.total) })), l.status != 200)
+          return s(l);
+        (u.data.story || u.data.stories) && await this.resolveStories(u.data, t), t.version === "published" && e != "/cdn/spaces/me" && i.set(a, u), u.data.cv && (t.version == "draft" && g[t.token] != u.data.cv && this.flushCache(), g[t.token] = u.data.cv), o(u);
+      } catch (l) {
+        if (l.response && l.response.status === 429 && (n += 1) < this.maxRetries)
+          return console.log(`Hit rate limit. Retrying in ${n} seconds.`), await (c = 1e3 * n, new Promise((u) => setTimeout(u, c))), this.cacheResponse(e, t, n).then(o).catch(s);
+        s(l);
       }
-      var l2;
+      var c;
     });
   }
-  throttledRequest(e2, t2, s2) {
-    return this.client[e2](t2, s2);
+  throttledRequest(e, t, n) {
+    return this.client[e](t, n);
   }
   cacheVersions() {
-    return c;
+    return g;
   }
   cacheVersion() {
-    return c[this.accessToken];
+    return g[this.accessToken];
   }
-  setCacheVersion(e2) {
-    this.accessToken && (c[this.accessToken] = e2);
+  setCacheVersion(e) {
+    this.accessToken && (g[this.accessToken] = e);
   }
   cacheProvider() {
-    return this.cache.type === "memory" ? { get: (e2) => l[e2], getAll: () => l, set(e2, t2) {
-      l[e2] = t2;
+    return this.cache.type === "memory" ? { get: (e) => m[e], getAll: () => m, set(e, t) {
+      m[e] = t;
     }, flush() {
-      l = {};
+      m = {};
     } } : { get() {
     }, getAll() {
     }, set() {
@@ -666,248 +566,362 @@ class h {
     return await this.cacheProvider().flush(), this;
   }
 }
-const apiFactory = (options = {}) => {
-  const { apiOptions } = options;
-  if (!apiOptions.accessToken) {
+const Ge = (r = {}) => {
+  const { apiOptions: e } = r;
+  if (!e.accessToken) {
     console.error("You need to provide an access token to interact with Storyblok API. Read https://www.storyblok.com/docs/api/content-delivery#topics/authentication");
     return;
   }
-  const storyblokApi = new h(apiOptions);
-  return { storyblokApi };
+  return { storyblokApi: new de(e) };
 };
-var editable = (blok) => {
-  if (typeof blok !== "object" || typeof blok._editable === "undefined") {
+var pe = (r) => {
+  if (typeof r != "object" || typeof r._editable > "u")
     return {};
-  }
-  const options = JSON.parse(blok._editable.replace(/^<!--#storyblok#/, "").replace(/-->$/, ""));
+  const e = JSON.parse(r._editable.replace(/^<!--#storyblok#/, "").replace(/-->$/, ""));
   return {
-    "data-blok-c": JSON.stringify(options),
-    "data-blok-uid": options.id + "-" + options.uid
+    "data-blok-c": JSON.stringify(e),
+    "data-blok-uid": e.id + "-" + e.uid
   };
 };
-let richTextResolver;
-const bridgeLatest = "https://app.storyblok.com/f/storyblok-v2-latest.js";
-const useStoryblokBridge = (id, cb, options = {}) => {
-  if (typeof window === "undefined") {
-    return;
-  }
-  if (typeof window.storyblokRegisterEvent === "undefined") {
-    console.error("Storyblok Bridge is disabled. Please enable it to use it. Read https://github.com/storyblok/storyblok-js");
-    return;
-  }
-  if (!id) {
-    console.warn("Story ID is not defined. Please provide a valid ID.");
-    return;
-  }
-  window.storyblokRegisterEvent(() => {
-    const sbBridge = new window.StoryblokBridge(options);
-    sbBridge.on(["input", "published", "change"], (event) => {
-      if (event.story.id === id) {
-        if (event.action === "input")
-          cb(event.story);
-        else
-          window.location.reload();
-      }
+let w;
+const ge = "https://app.storyblok.com/f/storyblok-v2-latest.js", ye = (r, e, t = {}) => {
+  if (!(typeof window > "u")) {
+    if (typeof window.storyblokRegisterEvent > "u") {
+      console.error("Storyblok Bridge is disabled. Please enable it to use it. Read https://github.com/storyblok/storyblok-js");
+      return;
+    }
+    if (!r) {
+      console.warn("Story ID is not defined. Please provide a valid ID.");
+      return;
+    }
+    window.storyblokRegisterEvent(() => {
+      new window.StoryblokBridge(t).on(["input", "published", "change"], (n) => {
+        n.action === "input" && n.story.id === r ? e(n.story) : (n.action === "change" || n.action === "published") && n.storyId === r && window.location.reload();
+      });
     });
-  });
-};
-const storyblokInit = (pluginOptions = {}) => {
+  }
+}, be = (r = {}) => {
   const {
-    bridge,
-    accessToken,
-    use = [],
-    apiOptions = {},
-    richText = {}
-  } = pluginOptions;
-  apiOptions.accessToken = apiOptions.accessToken || accessToken;
-  const options = { bridge, apiOptions };
-  let result = {};
-  use.forEach((pluginFactory) => {
-    result = __spreadValues(__spreadValues({}, result), pluginFactory(options));
-  });
-  if (bridge !== false) {
-    loadBridge(bridgeLatest);
-  }
-  richTextResolver = new RichTextResolver(richText.schema);
-  if (richText.resolver) {
-    setComponentResolver(richTextResolver, richText.resolver);
-  }
-  return result;
-};
-const setComponentResolver = (resolver, resolveFn) => {
-  resolver.addNode("blok", (node) => {
-    let html = "";
-    node.attrs.body.forEach((blok) => {
-      html += resolveFn(blok.component, blok);
-    });
-    return {
-      html
+    bridge: e,
+    accessToken: t,
+    use: n = [],
+    apiOptions: o = {},
+    richText: s = {}
+  } = r;
+  o.accessToken = o.accessToken || t;
+  const a = { bridge: e, apiOptions: o };
+  let i = {};
+  return n.forEach((c) => {
+    i = d(d({}, i), c(a));
+  }), e !== !1 && oe(ge), w = new I(s.schema), s.resolver && K(w, s.resolver), i;
+}, K = (r, e) => {
+  r.addNode("blok", (t) => {
+    let n = "";
+    return t.attrs.body.forEach((o) => {
+      n += e(o.component, o);
+    }), {
+      html: n
     };
   });
-};
-const renderRichText = (data, options) => {
-  if (!richTextResolver) {
+}, We = (r, e, t) => {
+  let n = t || w;
+  if (!n) {
     console.error("Please initialize the Storyblok SDK before calling the renderRichText function");
     return;
   }
-  if (data === "") {
-    return "";
-  } else if (!data) {
-    console.warn(`${data} is not a valid Richtext object. This might be because the value of the richtext field is empty.
+  return r === "" ? "" : r ? (e && (n = new I(e.schema), e.resolver && K(n, e.resolver)), n.render(r)) : (console.warn(`${r} is not a valid Richtext object. This might be because the value of the richtext field is empty.
     
-  For more info about the richtext object check https://github.com/storyblok/storyblok-js#rendering-rich-text`);
-    return "";
-  }
-  let localResolver = richTextResolver;
-  if (options) {
-    localResolver = new RichTextResolver(options.schema);
-    if (options.resolver) {
-      setComponentResolver(localResolver, options.resolver);
-    }
-  }
-  return localResolver.render(data);
+  For more info about the richtext object check https://github.com/storyblok/storyblok-js#rendering-rich-text`), "");
 };
-var render = function __render__() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c(_vm.blok.component, _vm._g(_vm._b({
-    tag: "component"
-  }, "component", Object.assign({}, _vm.$props, _vm.$attrs), false), _vm.$listeners));
-};
-var staticRenderFns = [];
-function normalizeComponent(scriptExports, render2, staticRenderFns2, functionalTemplate, injectStyles, scopeId, moduleIdentifier, shadowMode) {
-  var options = typeof scriptExports === "function" ? scriptExports.options : scriptExports;
-  if (render2) {
-    options.render = render2;
-    options.staticRenderFns = staticRenderFns2;
-    options._compiled = true;
-  }
-  if (functionalTemplate) {
-    options.functional = true;
-  }
-  if (scopeId) {
-    options._scopeId = "data-v-" + scopeId;
-  }
-  var hook;
-  if (moduleIdentifier) {
-    hook = function(context) {
-      context = context || this.$vnode && this.$vnode.ssrContext || this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext;
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== "undefined") {
-        context = __VUE_SSR_CONTEXT__;
-      }
-      if (injectStyles) {
-        injectStyles.call(this, context);
-      }
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier);
-      }
-    };
-    options._ssrRegister = hook;
-  } else if (injectStyles) {
-    hook = shadowMode ? function() {
-      injectStyles.call(
-        this,
-        (options.functional ? this.parent : this).$root.$options.shadowRoot
-      );
-    } : injectStyles;
-  }
-  if (hook) {
-    if (options.functional) {
-      options._injectStyles = hook;
-      var originalRender = options.render;
-      options.render = function renderWithStyleInjection(h2, context) {
-        hook.call(context);
-        return originalRender(h2, context);
+function me(r, e, t, n, o, s, a, i) {
+  var c = typeof r == "function" ? r.options : r;
+  e && (c.render = e, c.staticRenderFns = t, c._compiled = !0), n && (c.functional = !0), s && (c._scopeId = "data-v-" + s);
+  var l;
+  if (a ? (l = function(h) {
+    h = h || this.$vnode && this.$vnode.ssrContext || this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext, !h && typeof __VUE_SSR_CONTEXT__ < "u" && (h = __VUE_SSR_CONTEXT__), o && o.call(this, h), h && h._registeredComponents && h._registeredComponents.add(a);
+  }, c._ssrRegister = l) : o && (l = i ? function() {
+    o.call(
+      this,
+      (c.functional ? this.parent : this).$root.$options.shadowRoot
+    );
+  } : o), l)
+    if (c.functional) {
+      c._injectStyles = l;
+      var u = c.render;
+      c.render = function(h, b) {
+        return l.call(b), u(h, b);
       };
     } else {
-      var existing = options.beforeCreate;
-      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+      var f = c.beforeCreate;
+      c.beforeCreate = f ? [].concat(f, l) : [l];
     }
-  }
   return {
-    exports: scriptExports,
-    options
+    exports: r,
+    options: c
   };
 }
-const __vue2_script = {
+const ke = {
   props: {
     blok: {
       type: Object
     }
   }
 };
-const __cssModules = {};
-var __component__ = /* @__PURE__ */ normalizeComponent(
-  __vue2_script,
-  render,
-  staticRenderFns,
-  false,
-  __vue2_injectStyles,
+var _e = function() {
+  var r = this, e = r._self._c;
+  return e(r.blok.component, r._g(r._b({ tag: "component" }, "component", { ...r.$props, ...r.$attrs }, !1), r.$listeners));
+}, ve = [], $e = /* @__PURE__ */ me(
+  ke,
+  _e,
+  ve,
+  !1,
+  null,
   null,
   null,
   null
 );
-function __vue2_injectStyles(context) {
-  for (let o2 in __cssModules) {
-    this[o2] = __cssModules[o2];
-  }
-}
-var StoryblokComponent = /* @__PURE__ */ function() {
-  return __component__.exports;
-}();
-const printError = (fnName) => {
-  console.error(`You can't use ${fnName} if you're not loading apiPlugin. Please provide it on StoryblokVue initialization.
+const we = $e.exports, Se = (r) => {
+  console.error(`You can't use ${r} if you're not loading apiPlugin. Please provide it on StoryblokVue initialization.
     `);
-};
-const bindFn = (el, binding) => {
-  if (binding.value) {
-    const options = editable(binding.value);
-    el.setAttribute("data-blok-c", options["data-blok-c"]);
-    el.setAttribute("data-blok-uid", options["data-blok-uid"]);
-    el.classList.add("storyblok__outline");
+}, xe = (r, e) => {
+  if (e.value) {
+    const t = pe(e.value);
+    r.setAttribute("data-blok-c", t["data-blok-c"]), r.setAttribute("data-blok-uid", t["data-blok-uid"]), r.classList.add("storyblok__outline");
+  }
+}, Te = { bind: xe };
+let S = null;
+const Re = () => (S || Se("useStoryblokApi"), S), Ce = {
+  install(r, e = {}) {
+    r.directive("editable", Te), r.component("StoryblokComponent", we);
+    const { storyblokApi: t } = be(e);
+    S = t, r.prototype.$storyblokApi = t;
   }
 };
-const vEditableDirective = { bind: bindFn };
-let storyblokApiInstance = null;
-const useStoryblokApi = () => {
-  if (!storyblokApiInstance)
-    printError("useStoryblokApi");
-  return storyblokApiInstance;
-};
-const StoryblokVue = {
-  install(app, pluginOptions = {}) {
-    app.directive("editable", vEditableDirective);
-    app.component("StoryblokComponent", StoryblokComponent);
-    const { storyblokApi } = storyblokInit(pluginOptions);
-    storyblokApiInstance = storyblokApi;
-    app.prototype.$storyblokApi = storyblokApi;
-  }
-};
-if (typeof window !== "undefined" && window.Vue) {
-  window.Vue.use(StoryblokVue);
+typeof window < "u" && window.Vue && window.Vue.use(Ce);
+var y = {};
+Object.defineProperty(y, "__esModule", { value: !0 });
+const Oe = "$nuxt", Ee = "__NUXT__", Pe = !1, je = "/static-path", Ne = "/_nuxt/";
+var F = y.globalContext = Ee, p = y.globalNuxt = Oe, Ae = y.isFullStatic = Pe;
+y.publicPath = Ne;
+y.staticPath = je;
+function Me(r) {
+  if (!r)
+    throw new Error("You must provide a key. You can have it generated automatically by adding '@nuxtjs/composition-api/dist/babel-plugin' to your Babel plugins.");
 }
-const useStoryblok = (slug, apiOptions = {}, bridgeOptions = {}) => {
-  const storyblokApi = useStoryblokApi();
-  if (!storyblokApi)
+const C = () => {
+  const r = Y();
+  if (!!r)
+    return r.proxy;
+};
+function v(r) {
+  return r instanceof Function ? r() : r;
+}
+let Ie = {};
+const De = () => {
+  const r = C(), e = r ? "ssrRefs" : "globalRefs";
+  let t;
+  if (r && process.server) {
+    const o = (r[p] || r.$options).context.ssrContext;
+    t = o.nuxt.ssrRefs = o.nuxt.ssrRefs || {};
+  }
+  return { type: e, setData: (o, s) => {
+    const a = t || Ie;
+    a[o] = Ke(s);
+  } };
+}, A = (r) => !!r && typeof r == "object", Ke = (r) => r && JSON.parse(JSON.stringify(r)) || r, Fe = (r, e, t = "globalRefs") => {
+  var n, o, s, a;
+  return process.client ? process.env.NODE_ENV === "development" && ((n = window[p]) == null ? void 0 : n.context.isHMR) ? v(r) : (a = (s = (o = window[F]) == null ? void 0 : o[t]) == null ? void 0 : s[e]) != null ? a : v(r) : v(r);
+}, Ve = (r, e) => {
+  Me(e);
+  const { type: t, setData: n } = De();
+  let o = Fe(r, e, t);
+  if (process.client)
+    return L(o);
+  r instanceof Function && n(e, o);
+  const s = (i, c, l) => new Proxy(l, {
+    get(u, f) {
+      if (i(), A(u[f]))
+        return s(i, c, u[f]);
+      const h = Reflect.get(u, f);
+      return typeof h == "function" ? h.bind(u) : h;
+    },
+    set(u, f, h) {
+      const b = Reflect.set(u, f, h);
+      return n(e, o), c(), b;
+    }
+  });
+  return U((i, c) => ({
+    get: () => (i(), A(o) ? s(i, c, o) : o),
+    set: (l) => {
+      n(e, l), o = l, c();
+    }
+  }));
+}, qe = process.client && window[F];
+function V(r) {
+  let e;
+  if (r.message || typeof r == "string")
+    e = r.message || r;
+  else
+    try {
+      e = JSON.stringify(r, null, 2);
+    } catch {
+      e = `[${r.constructor.name}]`;
+    }
+  return {
+    ...r,
+    message: e,
+    statusCode: r.statusCode || r.status || r.response && r.response.status || 500
+  };
+}
+function ze(r, e = "") {
+  return function(n = e) {
+    return r[n] === void 0 && (r[n] = 0), r[n]++;
+  };
+}
+const x = /* @__PURE__ */ new WeakMap(), k = /* @__PURE__ */ new Map(), Je = (r) => {
+  var e, t, n;
+  return (n = (t = (e = r.$vnode) == null ? void 0 : e.elm) == null ? void 0 : t.dataset) == null ? void 0 : n.fetchKey;
+};
+function Le(r, e) {
+  const t = x.get(r) || [];
+  x.set(r, [...t, e]);
+}
+async function T() {
+  const r = x.get(this);
+  if (!r)
+    return;
+  this[p].nbFetching++, this.$fetchState.pending = !0, this.$fetchState.error = null, this._hydrated = !1;
+  let e = null;
+  const t = Date.now();
+  try {
+    await Promise.all(r.map((o) => {
+      if (k.has(o))
+        return k.get(o);
+      const s = Promise.resolve(o(this)).finally(() => k.delete(o));
+      return k.set(o, s), s;
+    }));
+  } catch (o) {
+    process.dev && console.error("Error in fetch():", o), e = V(o);
+  }
+  const n = (this._fetchDelay || 0) - (Date.now() - t);
+  n > 0 && await new Promise((o) => setTimeout(o, n)), this.$fetchState.error = e, this.$fetchState.pending = !1, this.$fetchState.timestamp = Date.now(), this.$nextTick(() => this[p].nbFetching--);
+}
+const q = (r) => {
+  r.$fetchState = r.$fetchState || H({
+    error: null,
+    pending: !1,
+    timestamp: 0
+  });
+}, z = (r) => {
+  const e = C();
+  if (!e)
+    throw new Error("This must be called within a setup function.");
+  M(() => {
+    const t = e._setupProxy || e;
+    for (const n in r)
+      try {
+        if (n in t) {
+          const o = n;
+          if (t[o] === r[n] || typeof t[o] == "function")
+            continue;
+          if (X(t[o])) {
+            for (const s in t[o])
+              s in r[n] || delete t[o][s];
+            Object.assign(t[o], r[n]);
+            continue;
+          }
+        }
+        G(t, n, r[n]);
+      } catch {
+        process.env.NODE_ENV === "development" && console.warn(`Could not hydrate ${n}.`);
+      }
+  });
+}, Ue = (r) => {
+  r._fetchKey = R(r);
+  const { fetchOnServer: e } = r.$options, t = typeof e == "function" ? e.call(r) !== !1 : e !== !1, n = r[p];
+  if (!t || (n == null ? void 0 : n.isPreview) || !(n != null && n._pagePayload))
+    return;
+  r._hydrated = !0;
+  const o = n._pagePayload.fetch[r._fetchKey];
+  if (o && o._error) {
+    r.$fetchState.error = o._error;
+    return;
+  }
+  z(o);
+};
+async function Be(r) {
+  if (!r._fetchOnServer)
+    return;
+  q(r);
+  try {
+    await T.call(r);
+  } catch (o) {
+    process.dev && console.error("Error in fetch():", o), r.$fetchState.error = V(o);
+  }
+  r.$fetchState.pending = !1, r._fetchKey = "push" in r.$ssrContext.nuxt.fetch ? r.$ssrContext.nuxt.fetch.length : r._fetchKey || r.$ssrContext.fetchCounters[""]++, r.$vnode.data || (r.$vnode.data = {});
+  const e = r.$vnode.data.attrs = r.$vnode.data.attrs || {};
+  e["data-fetch-key"] = r._fetchKey;
+  const t = Object.fromEntries(Object.entries((r == null ? void 0 : r._setupProxy) || (r == null ? void 0 : r._setupState)).filter(([o, s]) => !(s && typeof s == "object" && "_compiled" in s || s instanceof Function || s instanceof Promise)).map(([o, s]) => [o, W(s) ? s.value : s])), n = r.$fetchState.error ? { _error: r.$fetchState.error } : JSON.parse(JSON.stringify(t));
+  "push" in r.$ssrContext.nuxt.fetch ? r.$ssrContext.nuxt.fetch.push(n) : r.$ssrContext.nuxt.fetch[r._fetchKey] = n;
+}
+function R(r) {
+  const e = r[p];
+  if (process.server && "push" in r.$ssrContext.nuxt.fetch)
+    return;
+  if (process.client && "_payloadFetchIndex" in e)
+    return e._payloadFetchIndex = e._payloadFetchIndex || 0, e._payloadFetchIndex++;
+  const t = r.$options._scopeId || r.$options.name || "", n = ze(process.server ? r.$ssrContext.fetchCounters : r[p]._fetchCounters, t), o = r.$options;
+  if (typeof o.fetchKey == "function")
+    return o.fetchKey.call(r, n);
+  {
+    const s = typeof o.fetchKey == "string" ? o.fetchKey : t;
+    return s ? s + ":" + n(s) : String(n(s));
+  }
+}
+const Ye = (r) => {
+  var e;
+  const t = C();
+  if (!t)
+    throw new Error("This must be called within a setup function.");
+  Le(t, r), typeof t.$options.fetchOnServer == "function" ? t._fetchOnServer = t.$options.fetchOnServer.call(t) !== !1 : t._fetchOnServer = t.$options.fetchOnServer !== !1, process.server && (t._fetchKey = R(t)), q(t), B(() => Be(t));
+  function n() {
+    return {
+      fetch: t.$fetch,
+      fetchState: t.$fetchState,
+      $fetch: t.$fetch,
+      $fetchState: t.$fetchState
+    };
+  }
+  if (t._fetchDelay = typeof t.$options.fetchDelay == "number" ? t.$options.fetchDelay : 0, t.$fetch = T.bind(t), M(() => !t._hydrated && T.call(t)), process.server || !Je(t))
+    return process.client && Ae && Ue(t), n();
+  t._hydrated = !0, t._fetchKey = ((e = t.$vnode.elm) == null ? void 0 : e.dataset.fetchKey) || R(t);
+  const o = qe.fetch[t._fetchKey];
+  return o && o._error ? (t.$fetchState.error = o._error, n()) : (z(o), n());
+}, Qe = (r, e = {}, t = {}) => {
+  const n = Re();
+  if (!n)
     return console.error(
       "useStoryblok cannot be used if you disabled useApiClient when adding @storyblok/nuxt-2 to your nuxt.config.js"
     );
-  const story = ref(null);
-  onMounted(() => {
-    if (story.value && story.value.id) {
-      useStoryblokBridge(
-        story.value.id,
-        (evStory) => story.value = evStory,
-        bridgeOptions
-      );
-    }
+  const o = Ve(null, r);
+  Q(() => {
+    o.value && o.value.id && ye(
+      o.value.id,
+      (i) => o.value = i,
+      t
+    );
   });
-  const { fetch, fetchState } = useFetch(async () => {
-    const { data } = await storyblokApi.get(`cdn/stories/${slug}`, apiOptions);
-    story.value = data.story;
-  }, slug);
-  fetch();
-  return { story, fetchState };
+  const { fetch: s, fetchState: a } = Ye(async () => {
+    const { data: i } = await n.get(`cdn/stories/${r}`, e);
+    o.value = i.story;
+  });
+  return s(), { story: o, fetchState: a };
 };
-export { StoryblokVue, apiFactory as apiPlugin, renderRichText, useStoryblok, useStoryblokApi, useStoryblokBridge };
+export {
+  Ce as StoryblokVue,
+  Ge as apiPlugin,
+  We as renderRichText,
+  Qe as useStoryblok,
+  Re as useStoryblokApi,
+  ye as useStoryblokBridge
+};
