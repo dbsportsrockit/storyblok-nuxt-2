@@ -201,8 +201,8 @@ class I {
         let o = `<${n.tag}`;
         if (n.attrs)
           for (let s in n.attrs) {
-            let a = n.attrs[s];
-            a !== null && (o += ` ${s}="${a}"`);
+            let i = n.attrs[s];
+            i !== null && (o += ` ${s}="${i}"`);
           }
         return `${o}${t}>`;
       }
@@ -236,27 +236,27 @@ function D(r, e, t) {
     throw new TypeError("Expected `limit` to be a finite number");
   if (!N(t))
     throw new TypeError("Expected `interval` to be a finite number");
-  var n = [], o = [], s = 0, a = function() {
+  var n = [], o = [], s = 0, i = function() {
     s++;
-    var c = setTimeout(function() {
-      s--, n.length > 0 && a(), o = o.filter(function(u) {
-        return u !== c;
+    var a = setTimeout(function() {
+      s--, n.length > 0 && i(), o = o.filter(function(u) {
+        return u !== a;
       });
     }, t);
-    o.indexOf(c) < 0 && o.push(c);
+    o.indexOf(a) < 0 && o.push(a);
     var l = n.shift();
     l.resolve(r.apply(l.self, l.args));
-  }, i = function() {
-    var c = arguments, l = this;
+  }, c = function() {
+    var a = arguments, l = this;
     return new Promise(function(u, f) {
-      n.push({ resolve: u, reject: f, args: c, self: l }), s < e && a();
+      n.push({ resolve: u, reject: f, args: a, self: l }), s < e && i();
     });
   };
-  return i.abort = function() {
-    o.forEach(clearTimeout), o = [], n.forEach(function(c) {
-      c.reject(new throttle.AbortError());
+  return c.abort = function() {
+    o.forEach(clearTimeout), o = [], n.forEach(function(a) {
+      a.reject(new throttle.AbortError());
     }), n.length = 0;
-  }, i;
+  }, c;
 }
 D.AbortError = function() {
   Error.call(this, "Throttled function aborted"), this.name = "AbortError";
@@ -304,8 +304,8 @@ class he {
     return n && n.tag && t.push(this.renderOpeningTag(n.tag)), e.content ? e.content.forEach((o) => {
       t.push(this.renderNode(o));
     }) : e.text ? t.push(function(o) {
-      const s = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }, a = /[&<>"']/g, i = RegExp(a.source);
-      return o && i.test(o) ? o.replace(a, (c) => s[c]) : o;
+      const s = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }, i = /[&<>"']/g, c = RegExp(i.source);
+      return o && c.test(o) ? o.replace(i, (a) => s[a]) : o;
     }(e.text)) : n && n.singleTag ? t.push(this.renderTag(n.singleTag, " /")) : n && n.html && t.push(n.html), n && n.tag && t.push(this.renderClosingTag(n.tag)), e.marks && e.marks.slice(0).reverse().forEach((o) => {
       const s = this.getMatchingMark(o);
       s && t.push(this.renderClosingTag(s.tag));
@@ -319,8 +319,8 @@ class he {
         let o = `<${n.tag}`;
         if (n.attrs)
           for (let s in n.attrs) {
-            let a = n.attrs[s];
-            a !== null && (o += ` ${s}="${a}"`);
+            let i = n.attrs[s];
+            i !== null && (o += ` ${s}="${i}"`);
           }
         return `${o}${t}>`;
       }
@@ -349,9 +349,9 @@ const fe = (r = 0, e = r) => {
   for (const o in r) {
     if (!Object.prototype.hasOwnProperty.call(r, o))
       continue;
-    const s = r[o], a = t ? "" : encodeURIComponent(o);
-    let i;
-    i = typeof s == "object" ? $(s, e ? e + encodeURIComponent("[" + a + "]") : a, Array.isArray(s)) : (e ? e + encodeURIComponent("[" + a + "]") : a) + "=" + encodeURIComponent(s), n.push(i);
+    const s = r[o], i = t ? "" : encodeURIComponent(o);
+    let c;
+    c = typeof s == "object" ? $(s, e ? e + encodeURIComponent("[" + i + "]") : i, Array.isArray(s)) : (e ? e + encodeURIComponent("[" + i + "]") : i) + "=" + encodeURIComponent(s), n.push(c);
   }
   return n.join("&");
 };
@@ -359,8 +359,8 @@ let m = {}, g = {};
 class de {
   constructor(e, t) {
     if (!t) {
-      let s = e.region ? `-${e.region}` : "", a = e.https === !1 ? "http" : "https";
-      t = e.oauthToken === void 0 ? `${a}://api${s}.storyblok.com/v2` : `${a}://api${s}.storyblok.com/v1`;
+      let s = e.region ? `-${e.region}` : "", i = e.https === !1 ? "http" : "https";
+      t = e.oauthToken === void 0 ? `${i}://api${s}.storyblok.com/v2` : `${i}://api${s}.storyblok.com/v1`;
     }
     let n = Object.assign({}, e.headers), o = 5;
     e.oauthToken !== void 0 && (n.Authorization = e.oauthToken, o = 3), e.rateLimit !== void 0 && (o = e.rateLimit), this.richTextResolver = new he(e.richTextSchema), typeof e.componentResolver == "function" && this.setComponentResolver(e.componentResolver), this.maxRetries = e.maxRetries || 5, this.throttle = D(this.throttledRequest, o, 1e3), this.accessToken = e.accessToken, this.relations = {}, this.links = {}, this.cache = e.cache || { clear: "manual" }, this.client = J.create({ baseURL: t, timeout: e.timeout || 0, headers: n, proxy: e.proxy || !1 }), e.responseInterceptor && this.client.interceptors.response.use((s) => e.responseInterceptor(s)), this.resolveNestedRelations = e.resolveNestedRelations || !0;
@@ -380,7 +380,7 @@ class de {
     return ((n = "") => n.indexOf("/cdn/") > -1)(e) ? this.parseParams(t) : t;
   }
   makeRequest(e, t, n, o) {
-    const s = this.factoryParamOptions(e, ((a = {}, i = 25, c = 1) => _(d({}, a), { per_page: i, page: c }))(t, n, o));
+    const s = this.factoryParamOptions(e, ((i = {}, c = 25, a = 1) => _(d({}, i), { per_page: c, page: a }))(t, n, o));
     return this.cacheResponse(e, s);
   }
   get(e, t) {
@@ -389,10 +389,10 @@ class de {
     return this.cacheResponse(n, o);
   }
   async getAll(e, t = {}, n) {
-    const o = t.per_page || 25, s = `/${e}`, a = s.split("/");
-    n = n || a[a.length - 1];
-    const i = await this.makeRequest(s, t, o, 1), c = Math.ceil(i.total / o);
-    return ((l = [], u) => l.map(u).reduce((f, h) => [...f, ...h], []))([i, ...await (async (l = [], u) => Promise.all(l.map(u)))(fe(1, c), async (l) => this.makeRequest(s, t, o, l + 1))], (l) => Object.values(l.data[n]));
+    const o = t.per_page || 25, s = `/${e}`, i = s.split("/");
+    n = n || i[i.length - 1];
+    const c = await this.makeRequest(s, t, o, 1), a = Math.ceil(c.total / o);
+    return ((l = [], u) => l.map(u).reduce((f, h) => [...f, ...h], []))([c, ...await (async (l = [], u) => Promise.all(l.map(u)))(fe(1, a), async (l) => this.makeRequest(s, t, o, l + 1))], (l) => Object.values(l.data[n]));
   }
   post(e, t) {
     let n = `/${e}`;
@@ -463,14 +463,14 @@ class de {
     if (e.link_uuids) {
       const o = e.link_uuids.length;
       let s = [];
-      const a = 50;
-      for (let i = 0; i < o; i += a) {
-        const c = Math.min(o, i + a);
-        s.push(e.link_uuids.slice(i, c));
+      const i = 50;
+      for (let c = 0; c < o; c += i) {
+        const a = Math.min(o, c + i);
+        s.push(e.link_uuids.slice(c, a));
       }
-      for (let i = 0; i < s.length; i++)
-        (await this.getStories({ per_page: a, language: t.language, version: t.version, by_uuids: s[i].join(",") })).data.stories.forEach((c) => {
-          n.push(c);
+      for (let c = 0; c < s.length; c++)
+        (await this.getStories({ per_page: i, language: t.language, version: t.version, by_uuids: s[c].join(",") })).data.stories.forEach((a) => {
+          n.push(a);
         });
     } else
       n = e.links;
@@ -483,14 +483,14 @@ class de {
     if (e.rel_uuids) {
       const o = e.rel_uuids.length;
       let s = [];
-      const a = 50;
-      for (let i = 0; i < o; i += a) {
-        const c = Math.min(o, i + a);
-        s.push(e.rel_uuids.slice(i, c));
+      const i = 50;
+      for (let c = 0; c < o; c += i) {
+        const a = Math.min(o, c + i);
+        s.push(e.rel_uuids.slice(c, a));
       }
-      for (let i = 0; i < s.length; i++)
-        (await this.getStories({ per_page: a, language: t.language, version: t.version, by_uuids: s[i].join(",") })).data.stories.forEach((c) => {
-          n.push(c);
+      for (let c = 0; c < s.length; c++)
+        (await this.getStories({ per_page: i, language: t.language, version: t.version, by_uuids: s[c].join(",") })).data.stories.forEach((a) => {
+          n.push(a);
         });
     } else
       n = e.rels;
@@ -520,9 +520,9 @@ class de {
   }
   cacheResponse(e, t, n) {
     return n === void 0 && (n = 0), new Promise(async (o, s) => {
-      let a = $({ url: e, params: t }), i = this.cacheProvider();
+      let i = $({ url: e, params: t }), c = this.cacheProvider();
       if (this.cache.clear === "auto" && t.version === "draft" && await this.flushCache(), t.version === "published" && e != "/cdn/spaces/me") {
-        const l = await i.get(a);
+        const l = await c.get(i);
         if (l)
           return o(l);
       }
@@ -530,13 +530,13 @@ class de {
         let l = await this.throttle("get", e, { params: t, paramsSerializer: (f) => $(f) }), u = { data: l.data, headers: l.headers };
         if (u.data.assets && u.data.assets.length && this.resolveAssetsRelations(u.data), l.headers["per-page"] && (u = Object.assign({}, u, { perPage: parseInt(l.headers["per-page"]), total: parseInt(l.headers.total) })), l.status != 200)
           return s(l);
-        (u.data.story || u.data.stories) && await this.resolveStories(u.data, t), t.version === "published" && e != "/cdn/spaces/me" && i.set(a, u), u.data.cv && (t.version == "draft" && g[t.token] != u.data.cv && this.flushCache(), g[t.token] = u.data.cv), o(u);
+        (u.data.story || u.data.stories) && await this.resolveStories(u.data, t), t.version === "published" && e != "/cdn/spaces/me" && c.set(i, u), u.data.cv && (t.version == "draft" && g[t.token] != u.data.cv && this.flushCache(), g[t.token] = u.data.cv), o(u);
       } catch (l) {
         if (l.response && l.response.status === 429 && (n += 1) < this.maxRetries)
-          return console.log(`Hit rate limit. Retrying in ${n} seconds.`), await (c = 1e3 * n, new Promise((u) => setTimeout(u, c))), this.cacheResponse(e, t, n).then(o).catch(s);
+          return console.log(`Hit rate limit. Retrying in ${n} seconds.`), await (a = 1e3 * n, new Promise((u) => setTimeout(u, a))), this.cacheResponse(e, t, n).then(o).catch(s);
         s(l);
       }
-      var c;
+      var a;
     });
   }
   throttledRequest(e, t, n) {
@@ -609,11 +609,11 @@ const ge = "https://app.storyblok.com/f/storyblok-v2-latest.js", ye = (r, e, t =
     richText: s = {}
   } = r;
   o.accessToken = o.accessToken || t;
-  const a = { bridge: e, apiOptions: o };
-  let i = {};
-  return n.forEach((c) => {
-    i = d(d({}, i), c(a));
-  }), e !== !1 && oe(ge), w = new I(s.schema), s.resolver && K(w, s.resolver), i;
+  const i = { bridge: e, apiOptions: o };
+  let c = {};
+  return n.forEach((a) => {
+    c = d(d({}, c), a(i));
+  }), e !== !1 && oe(ge), w = new I(s.schema), s.resolver && K(w, s.resolver), c;
 }, K = (r, e) => {
   r.addNode("blok", (t) => {
     let n = "";
@@ -633,31 +633,31 @@ const ge = "https://app.storyblok.com/f/storyblok-v2-latest.js", ye = (r, e, t =
     
   For more info about the richtext object check https://github.com/storyblok/storyblok-js#rendering-rich-text`), "");
 };
-function me(r, e, t, n, o, s, a, i) {
-  var c = typeof r == "function" ? r.options : r;
-  e && (c.render = e, c.staticRenderFns = t, c._compiled = !0), n && (c.functional = !0), s && (c._scopeId = "data-v-" + s);
+function me(r, e, t, n, o, s, i, c) {
+  var a = typeof r == "function" ? r.options : r;
+  e && (a.render = e, a.staticRenderFns = t, a._compiled = !0), n && (a.functional = !0), s && (a._scopeId = "data-v-" + s);
   var l;
-  if (a ? (l = function(h) {
-    h = h || this.$vnode && this.$vnode.ssrContext || this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext, !h && typeof __VUE_SSR_CONTEXT__ < "u" && (h = __VUE_SSR_CONTEXT__), o && o.call(this, h), h && h._registeredComponents && h._registeredComponents.add(a);
-  }, c._ssrRegister = l) : o && (l = i ? function() {
+  if (i ? (l = function(h) {
+    h = h || this.$vnode && this.$vnode.ssrContext || this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext, !h && typeof __VUE_SSR_CONTEXT__ < "u" && (h = __VUE_SSR_CONTEXT__), o && o.call(this, h), h && h._registeredComponents && h._registeredComponents.add(i);
+  }, a._ssrRegister = l) : o && (l = c ? function() {
     o.call(
       this,
-      (c.functional ? this.parent : this).$root.$options.shadowRoot
+      (a.functional ? this.parent : this).$root.$options.shadowRoot
     );
   } : o), l)
-    if (c.functional) {
-      c._injectStyles = l;
-      var u = c.render;
-      c.render = function(h, b) {
+    if (a.functional) {
+      a._injectStyles = l;
+      var u = a.render;
+      a.render = function(h, b) {
         return l.call(b), u(h, b);
       };
     } else {
-      var f = c.beforeCreate;
-      c.beforeCreate = f ? [].concat(f, l) : [l];
+      var f = a.beforeCreate;
+      a.beforeCreate = f ? [].concat(f, l) : [l];
     }
   return {
     exports: r,
-    options: c
+    options: a
   };
 }
 const ke = {
@@ -725,12 +725,12 @@ const De = () => {
     t = o.nuxt.ssrRefs = o.nuxt.ssrRefs || {};
   }
   return { type: e, setData: (o, s) => {
-    const a = t || Ie;
-    a[o] = Ke(s);
+    const i = t || Ie;
+    i[o] = Ke(s);
   } };
 }, A = (r) => !!r && typeof r == "object", Ke = (r) => r && JSON.parse(JSON.stringify(r)) || r, Fe = (r, e, t = "globalRefs") => {
-  var n, o, s, a;
-  return process.client ? process.env.NODE_ENV === "development" && ((n = window[p]) == null ? void 0 : n.context.isHMR) ? v(r) : (a = (s = (o = window[F]) == null ? void 0 : o[t]) == null ? void 0 : s[e]) != null ? a : v(r) : v(r);
+  var n, o, s, i;
+  return process.client ? process.env.NODE_ENV === "development" && ((n = window[p]) == null ? void 0 : n.context.isHMR) ? v(r) : (i = (s = (o = window[F]) == null ? void 0 : o[t]) == null ? void 0 : s[e]) != null ? i : v(r) : v(r);
 }, Ve = (r, e) => {
   Me(e);
   const { type: t, setData: n } = De();
@@ -738,22 +738,22 @@ const De = () => {
   if (process.client)
     return L(o);
   r instanceof Function && n(e, o);
-  const s = (i, c, l) => new Proxy(l, {
+  const s = (c, a, l) => new Proxy(l, {
     get(u, f) {
-      if (i(), A(u[f]))
-        return s(i, c, u[f]);
+      if (c(), A(u[f]))
+        return s(c, a, u[f]);
       const h = Reflect.get(u, f);
       return typeof h == "function" ? h.bind(u) : h;
     },
     set(u, f, h) {
       const b = Reflect.set(u, f, h);
-      return n(e, o), c(), b;
+      return n(e, o), a(), b;
     }
   });
-  return U((i, c) => ({
-    get: () => (i(), A(o) ? s(i, c, o) : o),
+  return U((c, a) => ({
+    get: () => (c(), A(o) ? s(c, a, o) : o),
     set: (l) => {
-      n(e, l), o = l, c();
+      n(e, l), o = l, a();
     }
   }));
 }, qe = process.client && window[F];
@@ -911,11 +911,11 @@ const Ye = (r) => {
       t
     );
   });
-  const { fetch: s, fetchState: a } = Ye(async () => {
+  const { fetchState: s } = Ye(async () => {
     const { data: i } = await n.get(`cdn/stories/${r}`, e);
     o.value = i.story;
   });
-  return s(), { story: o, fetchState: a };
+  return { story: o, fetchState: s };
 };
 export {
   Ce as StoryblokVue,
