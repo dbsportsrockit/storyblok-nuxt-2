@@ -31,6 +31,13 @@
 
 If you are in a hurry, check out our official **[live demo](https://stackblitz.com/edit/nuxt-2-sdk-demo?file=pages%2Findex.vue)** on Stackblitz.
 
+#### Compatibility
+
+| Version to install                                                                                   | Support                                              |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Latest (from v2) `@storyblok/nuxt-2`                                                                 | Browsers and Node versions with no Fetch API support |
+| [Version 1](https://github.com/storyblok/storyblok-nuxt-2/releases/tag/v1.2.3) `@storyblok/nuxt-2@1` | Internet Explorer support                            |
+
 ## 🚀 Usage
 
 _Note: This module is for Nuxt 2. [Check out `@storyblok/nuxt` for Nuxt 3](https://github.com/storyblok/storyblok-nuxt)_.
@@ -57,11 +64,11 @@ Initialize the module by adding it to buildModules section of `nuxt.config.js` a
 }
 ```
 
+> ⚠️ This SDK uses the Fetch API under the hood. As this package only runs in engines using node <17.0.0 and it doesn't support it, we configured for you a ponyfill [fetch-ponyfill](https://github.com/qubyte/fetch-ponyfill). More info on [storyblok-js-client docs](https://github.com/storyblok/storyblok-js-client#fetch-use-polyfill-if-needed---version-5).
+
 #### Options
 
 When you initialize the module, you can pass all [_@storyblok/vue-2_ options](https://github.com/storyblok/storyblok-vue-2#storyblok-api) plus a `useApiClient` option.
-
-For spaces created in the United States, you have to set the `region` parameter accordingly `{ apiOptions: { region: 'us' } }`.
 
 ```js
 // Defaults
@@ -79,6 +86,32 @@ For spaces created in the United States, you have to set the `region` parameter 
   },
 ];
 ```
+
+#### Region parameter
+
+Possible values:
+
+- `eu` (default): For spaces created in the EU
+- `us`: For spaces created in the US
+- `cn`: For spaces created in China
+
+Full example for a space created in the US:
+
+```js
+[
+  "@storyblok/nuxt-2/module",
+  {
+    accessToken: "<your-access-token>",
+    bridge: true,
+    apiOptions: {
+      region: "us",
+    },
+    useApiClient: true,
+  },
+];
+```
+
+> Note: For spaces created in the United States or China, the `region` parameter **must** be specified.
 
 ## Getting started
 
@@ -262,6 +295,10 @@ Use this one-line function to cover the most common use case: updating the story
 #### $storyapi
 
 Equivalent to the client that `useStoryblokApi` returns, but accessible in the Nuxt context and components instance.
+
+## The Storyblok JavaScript SDK Ecosystem
+
+![A visual representation of the Storyblok JavaScript SDK Ecosystem](https://a.storyblok.com/f/88751/2400x1350/be4a4a4180/sdk-ecosystem.png/m/1200x0)
 
 ## 🔗 Related Links
 
